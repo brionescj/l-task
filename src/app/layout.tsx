@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +29,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        inter.variable,
+      )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="relative min-h-screen w-full overflow-hidden bg-[#08080A]">
+        <Image
+          src="/logo-ltek-clear.png"
+          alt=""
+          aria-hidden="true"
+          width={500}
+          height={500}
+          className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-220 w-220 -translate-x-1/2 -translate-y-1/2 object-contain opacity-70 blur-[60px] saturate-150 brightness-110"
+        />
+        {children}
+      </body>
     </html>
   );
 }
