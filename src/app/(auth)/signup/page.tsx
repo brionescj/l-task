@@ -29,7 +29,10 @@ export default function SignUpPage() {
   });
 
   async function onSubmit(data: SignUp) {
-    await signUpAction(data);
+    const result = await signUpAction(data);
+    if (result.success) {
+      form.reset();
+    }
   }
 
   return (
@@ -79,7 +82,7 @@ export default function SignUpPage() {
                 className="text-white text-[15px]"
                 htmlFor="form-signup-email"
               >
-                Nombre Completo
+                Correo
               </FieldLabel>
               <Input
                 {...field}
@@ -129,7 +132,7 @@ export default function SignUpPage() {
           form="form-signup"
           className="mt-4 bg-white text-black text-[16px] w-full font-semibold hover:bg-white h-15"
         >
-          Iniciar Sesión
+          Registrarse
         </Button>
       </form>
     </>

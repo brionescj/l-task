@@ -26,6 +26,12 @@
       "a11y": {
         "useSemanticElements": "off",
         "useKeyWithClickEvents": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "off"
       }
     },
     "domains": {
