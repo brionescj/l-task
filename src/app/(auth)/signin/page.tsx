@@ -1,14 +1,36 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import type z from "zod";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { signInAction } from "@/features/auth/actions/signin.action";
+import {
+  type SignIn,
+  SignInSchema,
+} from "@/features/auth/schemas/signin.schema";
 
 export default function SignInPage() {
+  const form = useForm<z.infer<typeof SignInSchema>>({
+    resolver: zodResolver(SignInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(data: SignIn) {
+    await signInAction(data);
+  }
+
   return (
     <>
       <div className="flex flex-col gap-1">
@@ -19,43 +41,73 @@ export default function SignInPage() {
           Ingresa tus datos para continuar con tus proyectos.
         </p>
       </div>
-      <Field>
-        <FieldLabel
-          htmlFor="input-field-username"
-          className="text-white text-[15px]"
-        >
-          Correo electrónico
-        </FieldLabel>
-        <Input
-          id="input-field-username"
-          type="text"
-          placeholder="tu@correo.com"
-          className="text-white h-13 border border-gray-700"
+      <form
+        className="space-y-4"
+        id="form-signin"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                className="text-white text-[15px]"
+                htmlFor="form-signin-email"
+              >
+                Correo electrónico
+              </FieldLabel>
+              <Input
+                {...field}
+                id="form-signin-email"
+                aria-invalid={fieldState.invalid}
+                placeholder="tu@correo.com"
+                autoComplete="off"
+                className="text-white h-13 border border-gray-700"
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
         />
-      </Field>
 
-      <Field>
-        <div className="flex justify-between items-center">
-          <FieldLabel
-            htmlFor="input-field-password"
-            className="text-white text-[15px]"
-          >
-            Contraseña
-          </FieldLabel>
-          <p className="text-[#2bc7e0] text-[14px]">
-            ¿Olvidaste tu contraseña?
-          </p>
-        </div>
-        <InputGroup className="text-white h-13 border border-gray-700">
-          <InputGroupInput id="input-group-url" placeholder="contraseña" />
-          <InputGroupAddon align="inline-end">
-            <Eye className="size-5" />
-          </InputGroupAddon>
-        </InputGroup>
-      </Field>
-      <Button className="mt-4 bg-white text-black text-[16px] w-full font-semibold hover:bg-white h-15">
-        Iniciar Sesión
-      </Button>
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                className="text-white text-[15px]"
+                htmlFor="form-signin-password"
+              >
+                Contraseña
+              </FieldLabel>
+              <InputGroup className="text-white h-13 border border-gray-700">
+                <InputGroupInput
+                  {...field}
+                  id="form-signin-password"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="contraseña"
+                  autoComplete="off"
+                  type="password"
+                />
+                <InputGroupAddon align="inline-end">
+                  <Eye className="size-5" />
+                </InputGroupAddon>
+              </InputGroup>
+
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Button
+          type="submit"
+          form="form-signin"
+          className="mt-4 bg-white text-black text-[16px] w-full font-semibold hover:bg-white h-15"
+        >
+          Iniciar Sesión
+        </Button>
+      </form>
     </>
   );
 }
