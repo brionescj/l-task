@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
+import { Navbar } from "@/components/navbar";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -47,6 +48,7 @@ export default function RootLayout({
           height={500}
           className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-220 w-220 -translate-x-1/2 -translate-y-1/2 object-contain opacity-70 blur-[60px] saturate-150 brightness-110"
         />
+        <Navbar />
         {children}
       </body>
     </html>
