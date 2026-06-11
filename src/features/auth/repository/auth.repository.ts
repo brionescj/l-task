@@ -7,4 +7,12 @@ export const AuthRepository = {
       data: payload,
     });
   },
+
+  getUserByEmail: async (email: string) => {
+    return await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  },
 };

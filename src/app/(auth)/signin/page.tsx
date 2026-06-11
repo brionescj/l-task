@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type z from "zod";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -28,7 +29,10 @@ export default function SignInPage() {
   });
 
   async function onSubmit(data: SignIn) {
-    await signInAction(data);
+    const result = await signInAction(data);
+    if (!result.success) {
+      toast.error("Usuario y/o contraseña incorrecto.");
+    }
   }
 
   return (
