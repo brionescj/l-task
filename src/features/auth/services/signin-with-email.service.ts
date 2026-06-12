@@ -1,4 +1,5 @@
 import type { User } from "@/generated/prisma";
+import { passwordManager } from "../lib/password-manager";
 import { AuthRepository } from "../repository/auth.repository";
 import type { SignIn } from "../schemas/signin.schema";
 
@@ -11,7 +12,12 @@ export const signInWithEmailService = async (
     return { success: false, data: null };
   }
 
-  if (user.password !== payload.password) {
+  const validPassword = await passwordManager.comparePassword(
+    payload.password,
+    user.password,
+  );
+
+  if (!validPassword) {
     return { success: false, data: null };
   }
 

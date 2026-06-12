@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type z from "zod";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -32,6 +33,8 @@ export default function SignUpPage() {
     const result = await signUpAction(data);
     if (result.success) {
       form.reset();
+    } else {
+      toast.error("Ha ocurrido un error al crear un usuario.");
     }
   }
 
