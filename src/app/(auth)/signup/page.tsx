@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
@@ -20,6 +21,8 @@ import {
 } from "@/features/auth/schemas/signup.schema";
 
 export default function SignUpPage() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
@@ -33,6 +36,7 @@ export default function SignUpPage() {
     const result = await signUpAction(data);
     if (result.success) {
       form.reset();
+      router.push("/dashboard");
     } else {
       toast.error("Ha ocurrido un error al crear un usuario.");
     }

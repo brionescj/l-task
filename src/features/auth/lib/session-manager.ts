@@ -1,4 +1,4 @@
-import { SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 
 const SECRET = new TextEncoder().encode(process.env.SESSION_SECRET);
@@ -16,7 +16,7 @@ export const sessionManager = {
     const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime(MAX_AGE)
+      .setExpirationTime(Math.floor(Date.now() / 1000) + MAX_AGE)
       .sign(SECRET);
 
     const cookieStore = await cookies();
@@ -28,5 +28,24 @@ export const sessionManager = {
       maxAge: MAX_AGE,
       path: "/",
     });
+  },
+
+  getSesssion: async () => {
+    const cookieStore = await cookies();
+
+    const token = cookieStore.get(COOKIE_NAME)?.value;
+    if (!token) return null;
+
+    try {
+      const { payload } = await jwtVerify(token, SECRET);
+      return payload;
+    } catch (_error) {
+      return null;
+    }
+  },
+
+  deleteSession: async () => {
+    const cookieStore = await cookies();
+    cookieStore.delete(COOKIE_NAME);
   },
 };

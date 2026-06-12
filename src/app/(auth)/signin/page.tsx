@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
@@ -20,6 +21,8 @@ import {
 } from "@/features/auth/schemas/signin.schema";
 
 export default function SignInPage() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -33,6 +36,8 @@ export default function SignInPage() {
     if (!result.success) {
       toast.error("Usuario y/o contraseña incorrecto.");
     }
+
+    router.push("/dashboard");
   }
 
   return (
